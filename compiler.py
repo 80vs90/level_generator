@@ -11,6 +11,9 @@ class Block(object):
     def __init__(self, char):
         self.char = char
 
+    def to_bin(self):
+        return ord(self.char)
+
     def __repr__(self):
         return "Block: %s" % self.char
 
@@ -67,6 +70,13 @@ def parse_level(level):
 def compile_level(ast):
     binary_out = []
     binary_out.extend([76, 86, 76])  # Magic bytes: LVL
+    binary_out.extend([ast['x'], ast['y'], ast['z']])
+    for layer in ast['ast']:
+        binary_out.append(76)
+        for row in layer:
+            binary_out.append(82)
+            for block in row:
+                binary_out.append(block.to_bin())
     return array('i', binary_out)
 
 
